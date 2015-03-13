@@ -373,6 +373,63 @@ void rcRasterizeTriangles(rcContext* ctx, const float* verts, const int /*nv*/,
 /// Spans will only be added for triangles that overlap the heightfield grid.
 ///
 /// @see rcHeightfield
+void rcRasterizeTriangles(rcContext* ctx, const float* verts, const unsigned short vertexStride, const int nv,
+	const unsigned short* tris, const unsigned char* areas, const int nt,
+	rcHeightfield& solid, const int flagMergeThr )
+{
+	rcAssert(ctx);
+
+	ctx->startTimer(RC_TIMER_RASTERIZE_TRIANGLES);
+
+	const float ics = 1.0f/solid.cs;
+	const float ich = 1.0f/solid.ch;
+
+	// Rasterize triangles.
+	for (int i = 0; i < nt; ++i)
+	{
+		const float* v0 = &verts[tris[i*3+0]*vertexStride];
+		const float* v1 = &verts[tris[i*3+1]*vertexStride];
+		const float* v2 = &verts[tris[i*3+2]*vertexStride];
+		// Rasterize.
+		rasterizeTri(v0, v1, v2, areas[i], solid, solid.bmin, solid.bmax, solid.cs, ics, ich, flagMergeThr);
+	}
+
+	ctx->stopTimer(RC_TIMER_RASTERIZE_TRIANGLES);
+}
+
+/// @par
+///
+/// Spans will only be added for triangles that overlap the heightfield grid.
+///
+/// @see rcHeightfield
+void rcRasterizeTriangles(rcContext* ctx, const float* verts, const unsigned short vertexStride, const int nv,
+	const unsigned int* tris, const unsigned char* areas, const int nt,
+	rcHeightfield& solid, const int flagMergeThr )
+{
+	rcAssert(ctx);
+
+	ctx->startTimer(RC_TIMER_RASTERIZE_TRIANGLES);
+
+	const float ics = 1.0f/solid.cs;
+	const float ich = 1.0f/solid.ch;
+
+	// Rasterize triangles.
+	for (int i = 0; i < nt; ++i)
+	{
+		const float* v0 = &verts[tris[i*3+0]*vertexStride];
+		const float* v1 = &verts[tris[i*3+1]*vertexStride];
+		const float* v2 = &verts[tris[i*3+2]*vertexStride];
+		// Rasterize.
+		rasterizeTri(v0, v1, v2, areas[i], solid, solid.bmin, solid.bmax, solid.cs, ics, ich, flagMergeThr);
+	}
+
+	ctx->stopTimer(RC_TIMER_RASTERIZE_TRIANGLES);
+}
+/// @par
+///
+/// Spans will only be added for triangles that overlap the heightfield grid.
+///
+/// @see rcHeightfield
 void rcRasterizeTriangles(rcContext* ctx, const float* verts, const int /*nv*/,
 						  const unsigned short* tris, const unsigned char* areas, const int nt,
 						  rcHeightfield& solid, const int flagMergeThr)

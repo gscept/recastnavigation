@@ -521,6 +521,13 @@ enum rcBuildContoursFlags
 	RC_CONTOUR_TESS_AREA_EDGES = 0x02,	///< Tessellate edges between areas during contour simplification.
 };
 
+/// Index types
+enum rcIndexType
+{
+	RC_IDX_USHORT = 0x01,
+	RC_IDX_INT	  = 0x02,
+};
+
 /// Applied to the region id field of contour vertices in order to extract the region id.
 /// The region id field of a vertex may have several flags applied to it.  So the
 /// fields value can't be used directly.
@@ -763,7 +770,7 @@ bool rcCreateHeightfield(rcContext* ctx, rcHeightfield& hf, int width, int heigh
 ///  @param[in]		nt					The number of triangles.
 ///  @param[out]	areas				The triangle area ids. [Length: >= @p nt]
 void rcMarkWalkableTriangles(rcContext* ctx, const float walkableSlopeAngle, const float* verts, int nv,
-							 const int* tris, int nt, unsigned char* areas); 
+							 const void* tris, int nt, unsigned char* areas, rcIndexType = RC_IDX_INT, unsigned short vertexStride = 3); 
 
 /// Sets the area id of all triangles with a slope greater than or equal to the specified value to #RC_NULL_AREA.
 ///  @ingroup recast
@@ -820,7 +827,7 @@ void rcRasterizeTriangle(rcContext* ctx, const float* v0, const float* v1, const
 ///  @param[in]		flagMergeThr	The distance where the walkable flag is favored over the non-walkable flag. 
 ///  								[Limit: >= 0] [Units: vx]
 void rcRasterizeTriangles(rcContext* ctx, const float* verts, const int nv,
-						  const int* tris, const unsigned char* areas, const int nt,
+						  const unsigned int* tris, const unsigned char* areas, const int nt,
 						  rcHeightfield& solid, const int flagMergeThr = 1);
 
 /// Rasterizes an indexed triangle mesh into the specified heightfield.
@@ -837,6 +844,38 @@ void rcRasterizeTriangles(rcContext* ctx, const float* verts, const int nv,
 void rcRasterizeTriangles(rcContext* ctx, const float* verts, const int nv,
 						  const unsigned short* tris, const unsigned char* areas, const int nt,
 						  rcHeightfield& solid, const int flagMergeThr = 1);
+
+/// Rasterizes an indexed triangle mesh into the specified heightfield.
+///  @ingroup recast
+///  @param[in,out]	ctx				The build context to use during the operation.
+///  @param[in]		verts			The vertices. [(x, y, z) + @p nv * @p vertexStride]
+///  @param[in]		vertexStride	bytes per vertex
+///  @param[in]		nv				The number of vertices.
+///  @param[in]		tris			The triangle indices. [(vertA, vertB, vertC) * @p nt]
+///  @param[in]		areas			The area id's of the triangles. [Limit: <= #RC_WALKABLE_AREA] [Size: @p nt]
+///  @param[in]		nt				The number of triangles.
+///  @param[in,out]	solid			An initialized heightfield.
+///  @param[in]		flagMergeThr	The distance where the walkable flag is favored over the non-walkable flag. 
+///  							[Limit: >= 0] [Units: vx]
+void rcRasterizeTriangles(rcContext* ctx, const float* verts, const unsigned short vertexStride, const int nv,
+	const unsigned short* tris, const unsigned char* areas, const int nt,
+	rcHeightfield& solid, const int flagMergeThr = 1);
+
+/// Rasterizes an indexed triangle mesh into the specified heightfield.
+///  @ingroup recast
+///  @param[in,out]	ctx				The build context to use during the operation.
+///  @param[in]		verts			The vertices. [(x, y, z) + @p nv * @p vertexStride]
+///  @param[in]		vertexStride	bytes per vertex
+///  @param[in]		nv				The number of vertices.
+///  @param[in]		tris			The triangle indices. [(vertA, vertB, vertC) * @p nt]
+///  @param[in]		areas			The area id's of the triangles. [Limit: <= #RC_WALKABLE_AREA] [Size: @p nt]
+///  @param[in]		nt				The number of triangles.
+///  @param[in,out]	solid			An initialized heightfield.
+///  @param[in]		flagMergeThr	The distance where the walkable flag is favored over the non-walkable flag. 
+///  							[Limit: >= 0] [Units: vx]
+void rcRasterizeTriangles(rcContext* ctx, const float* verts, const unsigned short vertexStride, const int nv,
+	const unsigned int* tris, const unsigned char* areas, const int nt,
+	rcHeightfield& solid, const int flagMergeThr = 1);
 
 /// Rasterizes triangles into the specified heightfield.
 ///  @ingroup recast
