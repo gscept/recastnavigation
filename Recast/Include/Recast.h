@@ -827,7 +827,7 @@ void rcRasterizeTriangle(rcContext* ctx, const float* v0, const float* v1, const
 ///  @param[in]		flagMergeThr	The distance where the walkable flag is favored over the non-walkable flag. 
 ///  								[Limit: >= 0] [Units: vx]
 void rcRasterizeTriangles(rcContext* ctx, const float* verts, const int nv,
-						  const unsigned int* tris, const unsigned char* areas, const int nt,
+						  const int* tris, const unsigned char* areas, const int nt,
 						  rcHeightfield& solid, const int flagMergeThr = 1);
 
 /// Rasterizes an indexed triangle mesh into the specified heightfield.
