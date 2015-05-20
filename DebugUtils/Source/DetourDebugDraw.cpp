@@ -141,10 +141,10 @@ static void drawMeshTile(duDebugDraw* dd, const dtNavMesh& mesh, const dtNavMesh
 			}
 			else
 			{
-				if (p->getArea() == 0) // Treat zero area type as default.
+				if (p->flags == 1) // Treat zero area type as default.
 					col = duRGBA(0,192,255,64);
 				else
-					col = duIntToCol(p->getArea(), 64);
+					col = duIntToCol(p->flags, 64);
 			}
 		}
 		dd->begin(DU_DRAW_TRIS);
